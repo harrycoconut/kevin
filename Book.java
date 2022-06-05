@@ -2,14 +2,14 @@ public class Book {
     private String name;
     private String author;
     private String publisher;
-    private int status; // 0:借出，1:歸還
-    private int quantity;
+    private int ID;
+    private boolean status; // true:可借，false:借出
 
-    public Book(String n, String a, String p, int q, int s) {
+    public Book(String n, String a, String p, int i, boolean s) {
         setName(n);
         setAuthor(a);
         setPublisher(p);
-        setQuantity(q);
+        setID(i);
         setStatus(s);
     }
 
@@ -37,20 +37,25 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getID() {
+        return ID;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setID(int iD) {
+        ID = iD;
     }
 
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String toString() {
+        return "書名 : " + getName() + " 作者: " + getAuthor() + " 出版商: " + getPublisher() + " ISBN: " + getID()
+                + ((getStatus() == true) ? " 可借閱" : " 已被借閱");
     }
 
 }
