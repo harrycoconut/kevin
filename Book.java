@@ -2,10 +2,10 @@ public class Book {
     private String name;
     private String author;
     private String publisher;
-    private int ID;
+    private String ID;
     private boolean status; // true:¥i­É¡Afalse:­É¥X
 
-    public Book(String n, String a, String p, int i, boolean s) {
+    public Book(String n, String a, String p, String i, boolean s) {
         setName(n);
         setAuthor(a);
         setPublisher(p);
@@ -37,11 +37,11 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
-    public void setID(int iD) {
+    public void setID(String iD) {
         ID = iD;
     }
 

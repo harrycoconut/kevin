@@ -75,7 +75,7 @@ public class Admin {
             String option2[] = { "繼續新增", "返回主畫面" };
             if (x == 1) {
                 allBooks.add(new Book(name.getText(), author.getText(), publisher.getText(),
-                        Integer.parseInt(ID.getText()), true));
+                        (ID.getText()), true));
                 int choice3 = JOptionPane.showOptionDialog(null, "新增成功!", "圖書館書籍借還系統", 1, 1, null, option2, option2[0]);
                 if (choice3 == 0) {
                     addBook();
@@ -124,7 +124,7 @@ public class Admin {
                     if (name.getText().equals(i.getName())) {
                         x--;
                     }
-                    if (Integer.parseInt(ID.getText()) == i.getID()) {
+                    if (ID.getText().equals(i.getID())) {
                         y--;
                     }
                 }
@@ -134,7 +134,7 @@ public class Admin {
                     if (x == 1 && y == 1) {
                         allBooks.remove(b);
                         allBooks.add(new Book(name.getText(), author.getText(), publisher.getText(),
-                                Integer.parseInt(ID.getText()), true));
+                                ID.getText(), true));
                         JOptionPane.showMessageDialog(null, "編輯成功!", "圖書館書籍借還系統", 1);
                         menu();
                     }

@@ -25,7 +25,7 @@ public abstract class Member {
     }
 
     public void menu() {
-        String option1[] = { "設定", "搜尋書籍", "借書", "還書", "借還紀錄", "登出" };
+        String option1[] = { "設定", "搜尋書籍", "借書", "還書", "借還紀錄", "繳納罰金", "登出" };
         int choice = JOptionPane.showOptionDialog(null, "", "圖書館書籍借還系統", 1, 1, null, option1, option1[0]);
         switch (choice) {
             case 0:
@@ -36,12 +36,19 @@ public abstract class Member {
                 break;
             case 2:
                 L.searchBookforBorrow();
+                break;
             case 3:
                 returnBook();
+                break;
             case 4:
                 history();
+                break;
             case 5:
+                payFine();
+                break;
+            case 6:
                 L.logout();
+                break;
             case -1:
                 String option2[] = { "確定", "取消" };
                 int choice1 = JOptionPane.showOptionDialog(null, "確定要關閉程式嗎?", "圖書館書籍借還系統", 1, 1, null, option2,
@@ -58,7 +65,7 @@ public abstract class Member {
     public void data() {
         String option1[] = { "編輯姓名帳號", "修改密碼", "返回主畫面" };
         String text = "個人資料:\n姓名: " + account.getName() + "\n帳號: " + account.getID() + "\n身分別: "
-                + showIdenfication();
+                + account.getIdenfication() + "\n需繳罰金: " + fine + "元";
         int choice = JOptionPane.showOptionDialog(null, text, "圖書館書籍借還系統", 1, 1, null, option1, option1[0]);
         if (choice == 0) {
             editData();
@@ -180,23 +187,65 @@ public abstract class Member {
         if (choice == -1) {
             menu();
         }
-
     }
 
-    public String showIdenfication() {
-        String i = "";
-        switch (account.getIdenfication()) {
-            case 0:
-                i += "學生";
-                break;
-            case 1:
-                i += "老師";
-                break;
-            case 2:
-                i += "職員";
-                break;
+    public void payFine() {
+        if (fine == 0) {
+            String option1[] = { "確定" };
+            int choice = JOptionPane.showOptionDialog(null, "你目前沒有罰金!", "圖書館書籍借還系統", 1, 1, null, option1, option1[0]);
+            if (choice == 0) {
+                menu();
+            }
+            if (choice == 0) {
+                menu();
+            }
+        } else {
+            String option2[] = { "確定", "返回" };
+            JTextField pay = new JTextField();
+            Object information[] = { "目前累計罰金:" + fine + "\n請輸入還款金額:", pay };
+            int choice1 = JOptionPane.showOptionDialog(null, information, "圖書館書籍借還系統", 1, 1, null, option2, option2[0]);
+            if (choice1 == 0) {
+                if (Integer.parseInt(pay.getText()) <= 0) {
+                    String option3[] = { "確定" };
+                    int choice2 = JOptionPane.showOptionDialog(null, "繳納金額不可以小於0!", "圖書館書籍借還系統", 0, 1, null, option3,
+                            option3[0]);
+                    switch (choice2) {
+                        case 0:
+                        case -1:
+                            payFine();
+                            break;
+                    }
+
+                } else if (Integer.parseInt(pay.getText()) > fine) {
+                    String option4[] = { "確定" };
+                    int choice3 = JOptionPane.showOptionDialog(null, "繳納金額不可以大於罰金!", "圖書館書籍借還系統", 0, 1, null, option4,
+                            option4[0]);
+                    switch (choice3) {
+                        case 0:
+                        case -1:
+                            payFine();
+                            break;
+                    }
+                } else {
+                    fine -= Integer.parseInt(pay.getText());
+                    String option5[] = { "確定" };
+                    int choice4 = JOptionPane.showOptionDialog(null, "繳納成功!\n目前剩餘罰金: " + fine + "元", "圖書館書籍借還系統", 0, 1,
+                            null, option5, option5[0]);
+                    switch (choice4) {
+                        case 0:
+                        case -1:
+                            menu();
+                            break;
+                    }
+                }
+            }
+            if (choice1 == 1) {
+                menu();
+            }
+            if (choice1 == -1) {
+                menu();
+            }
         }
-        return i;
     }
 
     public abstract void borrowBook(Book b);

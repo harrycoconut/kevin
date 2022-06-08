@@ -2,9 +2,9 @@ public class AccountData {
     private String name;
     private String ID;
     private String password;
-    private int idenfication;
+    private String idenfication;
 
-    public AccountData(String n, String a, String p, int i) {
+    public AccountData(String n, String a, String p, String i) {
         setName(n);
         setID(a);
         setPassword(p);
@@ -35,11 +35,11 @@ public class AccountData {
         this.password = password;
     }
 
-    public int getIdenfication() {
+    public String getIdenfication() {
         return idenfication;
     }
 
-    public void setIdenfication(int idenfication) {
+    public void setIdenfication(String idenfication) {
         this.idenfication = idenfication;
     }
 

@@ -8,9 +8,9 @@ public class Record {
     private boolean bookStatus; // 是否已歸還 true:歸還
     private boolean dueStatus; // 逾期顯示 true:逾期
     private int fine;
-    private int idenfication;
+    private String idenfication;
 
-    public Record(Book b, LocalDate bd, LocalDate rd, boolean bs, boolean ds, int f, int i) {
+    public Record(Book b, LocalDate bd, LocalDate rd, boolean bs, boolean ds, int f, String i) {
         setBook(b);
         setBorrowDate(bd);
         setReturnDate(rd);
@@ -69,11 +69,11 @@ public class Record {
         this.fine = fine;
     }
 
-    public int getIdenfication() {
+    public String getIdenfication() {
         return idenfication;
     }
 
-    public void setIdenfication(int idenfication) {
+    public void setIdenfication(String idenfication) {
         this.idenfication = idenfication;
     }
 
@@ -100,13 +100,13 @@ public class Record {
     public int typeOfFine() {
         int x = 0;
         switch (idenfication) {
-            case 0:
+            case "學生":
                 x = 100;
                 break;
-            case 1:
+            case "老師":
                 x = 90;
                 break;
-            case 2:
+            case "職員":
                 x = 80;
                 break;
         }
@@ -116,13 +116,13 @@ public class Record {
     public int typeOfDays() {
         int x = 0;
         switch (idenfication) {
-            case 0:
+            case "學生":
                 x = 14;
                 break;
-            case 1:
+            case "老師":
                 x = 21;
                 break;
-            case 2:
+            case "職員":
                 x = 28;
                 break;
         }
@@ -131,7 +131,7 @@ public class Record {
 
     public String toString() {
         String text = String.format("%-30s%-15s%-15s%-10s%-10s%-10d", book.getName(), getBorrowDate(), getReturnDate(),
-                ((getBookStatus()) ? "已歸還" : "尚未歸還"), ((getDueStatus()) ? "已逾期" : "尚未逾期"), getFine());
+                ((getBookStatus()) ? "已歸還" : "尚未歸還"), ((getDueStatus()) ? "已歸還" : "尚未歸還"), getFine());
         return text;
     }
 }

@@ -1,22 +1,38 @@
 import javax.swing.*;
-
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LibrarySystem {
     private static ArrayList<Book> booksInLibrary = new ArrayList<Book>();
     private static ArrayList<AccountData> allAccounts = new ArrayList<AccountData>();
-    private static AccountData nowAccount = new AccountData(null, null, null, 0);
+    private static AccountData nowAccount = new AccountData(null, null, null, null);
 
     public LibrarySystem() {
 
     }
 
-    public void initialization() {
-        booksInLibrary.add(new Book("1", "JK", "1", 1, true));
-        booksInLibrary.add(new Book("2", "JK", "2", 2, true));
-        booksInLibrary.add(new Book("3", "JK", "3", 3, true));
-        allAccounts.add(new AccountData("韋凱翔", "kxwai", "2326", 0));
-        allAccounts.add(new AccountData("凱", "kevin", "2326", 3));
+    public void initialization() throws IOException {
+        File books = new File("Books.txt");
+        Scanner s = new Scanner(books);
+        while (s.hasNextLine()) {
+            String tmp = s.nextLine();
+            //System.out.println(tmp);
+            String tmps[] = tmp.split(" ");
+            booksInLibrary.add(new Book(tmps[0], tmps[1], tmps[2], tmps[3], true));
+        }
+
+        File Members = new File("Members.txt");
+        s = new Scanner(Members);
+        while (s.hasNextLine()) {
+            String tmp = s.nextLine();
+            //System.out.println(tmp);
+            String tmps[] = tmp.split(" ");
+            allAccounts.add(new AccountData(tmps[0], tmps[1], tmps[2], tmps[3]));
+        }
+        booksInLibrary.add(new Book("1", "JK", "1", "1", true));
+        booksInLibrary.add(new Book("2", "JK", "2", "2", true));
+        booksInLibrary.add(new Book("3", "JK", "3", "3", true));
     }
 
     public void setBook(Book book) {
@@ -93,7 +109,7 @@ public class LibrarySystem {
 
             if (x == 1 && y == 1) {
                 allAccounts.add(new AccountData(name.getText(), account.getText(), password.getText(),
-                        idenfication.getSelectedIndex()));
+                        (String) idenfication.getSelectedItem()));
                 JOptionPane.showMessageDialog(null, "註冊成功!\n將跳轉至登入頁面", "圖書館書籍借還系統", 1);
                 login();
             }
@@ -139,19 +155,19 @@ public class LibrarySystem {
 
             if (x == 1 && y == 1) {
                 switch (nowAccount.getIdenfication()) {
-                    case 0:
+                    case "學生":
                         Member m = new Student(nowAccount);
                         m.menu();
                         break;
-                    case 1:
+                    case "老師":
                         m = new Teacher(nowAccount);
                         m.menu();
                         break;
-                    case 2:
+                    case "職員":
                         m = new Staff(nowAccount);
                         m.menu();
                         break;
-                    case 3:
+                    case "管理員":
                         Admin a = new Admin(nowAccount);
                         a.menu();
                         break;
@@ -187,9 +203,12 @@ public class LibrarySystem {
         } else if (choice != -1) {
             JTextField key = new JTextField();
             String option2[] = { "確定", "返回主畫面" };
-            Object information[] = { "輸入書名:", key };
+            Object information[] = { "請輸入關鍵字:", key };
             int choose = JOptionPane.showOptionDialog(null, information, "圖書館書籍借還系統", 1, 1, null, option2, option2[0]);
             if (choose == 1) {
+                backToMenu();
+            }
+            if (choose == -1) {
                 backToMenu();
             }
 
@@ -204,7 +223,7 @@ public class LibrarySystem {
                     searchBookPublisher(key.getText());
                     break;
                 case 3:
-                    searchID(Integer.parseInt(key.getText()));
+                    searchID(key.getText());
                     break;
             }
         } else {
@@ -226,7 +245,7 @@ public class LibrarySystem {
 
         String text = "搜尋結果: \n";
         int x = 0; // x:0 未找到
-        Book temp = new Book(null, null, null, 0, false);
+        Book temp = new Book(null, null, null, null, false);
         for (Book b : booksInLibrary) {
             if (b.getName().equals(key.getText())) {
                 x++;
@@ -274,7 +293,7 @@ public class LibrarySystem {
         Object information[] = { "輸入書名:", target };
 
         int choose = JOptionPane.showOptionDialog(null, information, "圖書館書籍借還系統", 1, 1, null, option1, option1[0]);
-        Book temp = new Book(null, null, "test", 0, false);
+        Book temp = new Book(null, null, "test", null, false);
         if (choose == 0) {
             String text = "搜尋結果: \n";
             int x = 0; // x:0 未找到
@@ -295,7 +314,7 @@ public class LibrarySystem {
     public void searchBookName(String key) {
         String text = "搜尋結果: \n";
         int x = 0; // x:0 未找到
-        Book temp = new Book(null, null, null, 0, false);
+        Book temp = new Book(null, null, null, null, false);
         for (Book b : booksInLibrary) {
             if (b.getName().equals(key)) {
                 x++;
@@ -314,14 +333,15 @@ public class LibrarySystem {
             }
             if (choice == 1) {
                 if (temp.getStatus() == true) {
-                    if (nowAccount.getIdenfication() != 3) {
-                        m.borrowBook(temp);
-                    } else {
+                    if (nowAccount.getIdenfication().equals("管理員")) {
                         String o[] = { "返回主選單" };
                         int c = JOptionPane.showOptionDialog(null, "管理員無法借閱!", "圖書館書籍借還系統", 1, 1, null, o, o[0]);
                         if (c == 0) {
                             backToMenu();
                         }
+                    } else {
+                        m.borrowBook(temp);
+
                     }
                 } else {
                     String option2[] = { "繼續搜尋", "回主畫面" };
@@ -351,7 +371,7 @@ public class LibrarySystem {
     public void searchBookAuthor(String key) {
         String text = "搜尋結果: \n";
         int x = 0; // x:0 未找到
-        Book temp = new Book(null, null, null, 0, false);
+        Book temp = new Book(null, null, null, null, false);
         for (Book b : booksInLibrary) {
             if (b.getAuthor().equals(key)) {
                 x++;
@@ -381,7 +401,7 @@ public class LibrarySystem {
     public void searchBookPublisher(String key) {
         String text = "搜尋結果: \n";
         int x = 0; // x:0 未找到
-        Book temp = new Book(null, null, null, 0, false);
+        Book temp = new Book(null, null, null, null, false);
         for (Book b : booksInLibrary) {
             if (b.getPublisher().equals(key)) {
                 x++;
@@ -408,12 +428,12 @@ public class LibrarySystem {
         }
     }
 
-    public void searchID(int key) {
+    public void searchID(String key) {
         String text = "搜尋結果: \n";
         int x = 0; // x:0 未找到
-        Book temp = new Book(null, null, null, 0, false);
+        Book temp = new Book(null, null, null, null, false);
         for (Book b : booksInLibrary) {
-            if (b.getID() == key) {
+            if (b.getID().equals(key)) {
                 x++;
                 text += b.toString() + "\n";
             }
@@ -454,13 +474,13 @@ public class LibrarySystem {
     public Member memberType(AccountData a) {
         Member m = new Student(a);
         switch (a.getIdenfication()) {
-            case 0:
+            case "學生":
                 m = new Student(a);
                 break;
-            case 1:
+            case "老師":
                 m = new Teacher(a);
                 break;
-            case 2:
+            case "職員":
                 m = new Staff(a);
                 break;
         }
@@ -469,19 +489,19 @@ public class LibrarySystem {
 
     public void backToMenu() {
         switch (nowAccount.getIdenfication()) {
-            case 0:
+            case "學生":
                 Member m = new Student(nowAccount);
                 m.menu();
                 break;
-            case 1:
+            case "老師":
                 m = new Teacher(nowAccount);
                 m.menu();
                 break;
-            case 2:
+            case "職員":
                 m = new Staff(nowAccount);
                 m.menu();
                 break;
-            case 3:
+            case "管理員":
                 Admin a = new Admin(nowAccount);
                 a.menu();
                 break;

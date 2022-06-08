@@ -12,7 +12,7 @@ public class Teacher extends Member {
     public void borrowBook(Book b) {
         LocalDate current = LocalDate.now();
         LocalDate returnday = current.plusDays(21);
-        allRecords.add(new Record(b, current, returnday, false, false, 0, 1));
+        allRecords.add(new Record(b, current, returnday, false, false, 0, "老師"));
         borrowList.add(b);
         b.setStatus(false);
         String option1[] = { "繼續借閱", "返回主畫面" };
@@ -42,7 +42,7 @@ public class Teacher extends Member {
             Object information[] = { "選擇你要還的書:", borrowBox };
             int choice1 = JOptionPane.showOptionDialog(null, information, "圖書館書籍借還系統", 1, 1, null, option3, option3[0]);
             if (choice1 == 0) {
-                Book tempBook = new Book(null, null, null, 0, true);
+                Book tempBook = new Book(null, null, null, null, true);
                 for (Book b : borrowList) {
                     if (borrowBox.getSelectedItem().equals(b.getName())) {
                         tempBook = b;
@@ -52,7 +52,7 @@ public class Teacher extends Member {
                 }
                 LocalDate current = LocalDate.now();
 
-                Record tempRecord = new Record(null, current, current, false, false, 0, 0);
+                Record tempRecord = new Record(null, current, current, false, false, 0, null);
                 for (Record r : allRecords) {
                     if (tempBook.getName().equals(r.getBook().getName())) {
                         tempRecord = r;
